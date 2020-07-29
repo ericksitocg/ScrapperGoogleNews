@@ -43,3 +43,11 @@ btn_guardar.click()
 sleep(random.uniform(random.randint(3,5),8.56))
 
 driver.switch_to.alert.accept()
+
+#Extrayendo las noticias
+#Cada noticia es un elemento tipo g-card
+
+#Fuente: /html/body/div[5]/div[2]/div[9]/div[1]/div[2]/div/div[2]/div[2]/div/div/div[8]/g-card/div/div/div[2]/a/div/div[2]/div[1]/text()
+#Titulo: /html/body/div[5]/div[2]/div[9]/div[1]/div[2]/div/div[2]/div[2]/div/div/div[8]/g-card/div/div/div[2]/a/div/div[2]/div[2]/text()
+#Encabezado: /html/body/div[5]/div[2]/div[9]/div[1]/div[2]/div/div[2]/div[2]/div/div/div[8]/g-card/div/div/div[2]/a/div/div[2]/div[3]/div[1]/text()
+#fecha: /html/body/div[5]/div[2]/div[9]/div[1]/div[2]/div/div[2]/div[2]/div/div/div[8]/g-card/div/div/div[2]/a/div/div[2]/div[3]/div[2]/span/span/span/text()
