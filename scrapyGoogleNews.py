@@ -69,9 +69,10 @@ datos = {"fecha":[],"fuente":[],"titulo":[],"encabezado":[]}
 pagina_conf = False
 # Instancio el driver de selenium que va a controlar el navegador
 driver = webdriver.Chrome(ChromeDriverManager().install())
+#Se realiza un recorrido por los dias
 for dia in range(1,26):
     ##Scraping para el dia 26 de Mayo del 2020
-    pagina_principal,fecha = generarLinkPorFecha(dia,7)
+    pagina_principal,fecha = generarLinkPorFecha(dia,7)#Se configura el mes
 
     #Voy a la pagina que quiero
     driver.get(pagina_principal)
