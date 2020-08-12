@@ -29,11 +29,11 @@ def recoletarNoticias(datos,fecha):
             encabezado = noticia.find_element_by_xpath('./div[3]/div').text
         except:
             encabezado = ""
-
-        datos["fecha"].append(fecha)
-        datos["fuente"].append(fuente.replace(",",""))
-        datos["titulo"].append(titulo.replace(",",""))
-        datos["encabezado"].append(encabezado.replace(",",""))
+        if fuente!="" and titulo!="" and encabezado!="":
+            datos["fecha"].append(fecha)
+            datos["fuente"].append(fuente.replace(",",""))
+            datos["titulo"].append(titulo.replace(",",""))
+            datos["encabezado"].append(encabezado.replace(",",""))
 
 def configurarRegionUSA():
     xpath_bton_preferencias = "/html/body/div[5]/div[2]/div[3]/div/div/div[1]/div/div/div[2]/g-header-menu/a"
@@ -61,35 +61,51 @@ def siguientePaginaNoticias():
     except:
         return False
 
-def generarLinkPorFecha(dia,mes,anio=2020):
-    link = "https://www.google.com/search?q=george+floyd&biw=1042&bih=590&source=lnt&tbs=cdr%3A1%2Ccd_min%3A{0}%2F{1}%2F{2}%2Ccd_max%3A{0}%2F{1}%2F{2}&tbm=nws".format(mes,dia,anio)
+
+def generarLinkPorFecha(palabras_clave,dia,mes,anio=2020):
+    if palabras_clave.count(" ") > 0:
+        clave = "+".join(palabras_clave.split(" "))
+    else:
+        clave = palabras_clave
+    link = "https://www.google.com/search?q={3}&biw=1042&bih=590&source=lnt&tbs=cdr%3A1%2Ccd_min%3A{0}%2F{1}%2F{2}%2Ccd_max%3A{0}%2F{1}%2F{2}&tbm=nws".format(mes,dia,anio,clave)
     return link,str(dia) + "/" + str(mes) + "/" + str(anio)
-#-------------------------------------------------------------------------------
-datos = {"fecha":[],"fuente":[],"titulo":[],"encabezado":[]}
-pagina_conf = False
+
+def obtenerNoticiasFecha(palabra_clave,dia,mes,anio=2020):
+    datos = {"fecha": [], "fuente": [], "titulo": [], "encabezado": []}
+    pagina_conf = True
+    if dia.count("-") > 0:
+        inicio,final = dia.split("-")
+    else:
+        inicio,final = dia,dia
+    print(inicio,final)
+    for dia_i in range(int(inicio),int(final) + 1):
+
+        pagina_principal,fecha = generarLinkPorFecha(palabra_clave,dia_i,mes)#Se configura el mes
+
+        #Voy a la pagina que quiero
+        driver.get(pagina_principal)
+
+        #Configurando region y numero de noticias por seccion
+        if not pagina_conf:
+            configurarRegionUSA()
+            pagina_conf = True
+
+        #Pagina configurada, ahora vamos a recoger las noticias
+        recoletarNoticias(datos,fecha)
+
+        #Debemos avanzar hasta la siguiente pagina
+        while siguientePaginaNoticias():
+            recoletarNoticias(datos,fecha)
+        print("Terminado: %s"%fecha)
+
+    #guardando datos
+    nombre_archivo = "".join(list(map(lambda x:x.capitalize(),palabra_clave.split(" "))))
+    df = pd.DataFrame(datos,columns = ['fecha', 'fuente', 'titulo', 'encabezado'])
+    df.to_csv(nombre_archivo+'.csv',index=False)
+    print("News guardados exitosamente en " + nombre_archivo + ".csv")
+#----------------------------------------------------------------------------------------------------------------------------------------
+
 # Instancio el driver de selenium que va a controlar el navegador
 driver = webdriver.Chrome(ChromeDriverManager().install())
-#Se realiza un recorrido por los dias
-for dia in range(1,26):
-    ##Scraping para el dia 26 de Mayo del 2020
-    pagina_principal,fecha = generarLinkPorFecha(dia,7)#Se configura el mes
-
-    #Voy a la pagina que quiero
-    driver.get(pagina_principal)
-
-    #Configurando region y numero de noticias por seccion
-    if not pagina_conf:
-        configurarRegionUSA()
-        pagina_conf = True
-
-    #Pagina configurada, ahora vamos a recoger las noticias
-    recoletarNoticias(datos,fecha)
-
-    #Debemos avanzar hasta la siguiente pagina
-    while siguientePaginaNoticias():
-        recoletarNoticias(datos,fecha)
-    print("Terminado: %s"%fecha)
-
-#guardando datos
-df = pd.DataFrame(datos,columns = ['fecha', 'fuente', 'titulo', 'encabezado'])
-df.to_csv('data_google_news3.csv',index=False)
+#Las noticias sobre un tema, desde el 11 hasta el 13 del mes 8
+obtenerNoticiasFecha("covid-19","11-13","8")
