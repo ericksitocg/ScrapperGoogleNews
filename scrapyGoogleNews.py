@@ -112,6 +112,7 @@ def obtenerNoticiasFecha(palabra_clave,dia,mes,anio=2020):
     df = pd.DataFrame(datos,columns = ['fecha', 'fuente', 'titulo', 'encabezado'])
     df.to_csv('datasets/'+nombreUnido.lower() + '/' +nombre_archivo+'.csv',index=False)
     print("News guardados exitosamente en " + nombre_archivo + ".csv")
+    print("Precionar Ctrl + C para evitar que la computadora explote")
     while True:
         playsound("alert.mp3")
         sleep(10)
@@ -121,7 +122,7 @@ def obtenerNoticiasFecha(palabra_clave,dia,mes,anio=2020):
 # Instancio el driver de selenium que va a controlar el navegador
 driver = webdriver.Chrome(ChromeDriverManager().install())
 #Las noticias sobre un covid-19 desde 1 hasta el 31 de Enero
-obtenerNoticiasFecha("covid-19","1-31","1")
+#obtenerNoticiasFecha("covid-19","1","1")
 #Las noticias sobre un covid-19 desde 1 hasta el 29 de Febrero
 #obtenerNoticiasFecha("covid-19","1-29","2")
 #Las noticias sobre un covid-19 desde 1 hasta el 31 de Marzo
