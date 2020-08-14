@@ -122,7 +122,7 @@ def obtenerNoticiasFecha(palabra_clave,dia,mes,anio=2020):
 # Instancio el driver de selenium que va a controlar el navegador
 driver = webdriver.Chrome(ChromeDriverManager().install())
 #Las noticias sobre un covid-19 desde 1 hasta el 31 de Enero
-#obtenerNoticiasFecha("covid-19","1","1")
+obtenerNoticiasFecha("covid-19","1-31","1")
 #Las noticias sobre un covid-19 desde 1 hasta el 29 de Febrero
 #obtenerNoticiasFecha("covid-19","1-29","2")
 #Las noticias sobre un covid-19 desde 1 hasta el 31 de Marzo
