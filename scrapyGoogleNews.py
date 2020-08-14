@@ -45,7 +45,7 @@ def configurarRegionUSA():
     xpath_bton_preferencias = "/html/body/div[5]/div[2]/div[3]/div/div/div[1]/div/div/div[2]/g-header-menu/a"
     xpath_bton_conf_busqueda = "/html/body/div[5]/div[2]/div[5]/div/a[1]"
     xpath_bton_mostrar_mas = "/html/body/div[3]/form/div/div[2]/div[1]/div[2]/div[6]/div/a[1]"
-    xpath_bton_usa = "/html/body/div[3]/form/div/div[2]/div[1]/div[2]/div[6]/div/div/div[2]/div[1]/div[37]/div/span[1]"
+    xpath_bton_usa = "/html/body/div[3]/form/div/div[2]/div[1]/div[2]/div[6]/div/div/div[2]/div[1]/div[36]/div/span[1]"
     xpath_btn_guardar = "/html/body/div[3]/form/div/div[2]/div[2]/div/div[1]"
 
     # Identifico a las noticias en la estructura html
