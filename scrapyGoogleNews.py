@@ -45,7 +45,7 @@ def configurarRegionUSA():
     xpath_bton_preferencias = "/html/body/div[5]/div[2]/div[3]/div/div/div[1]/div/div/div[2]/g-header-menu/a"
     xpath_bton_conf_busqueda = "/html/body/div[5]/div[2]/div[5]/div/a[1]"
     xpath_bton_mostrar_mas = "/html/body/div[3]/form/div/div[2]/div[1]/div[2]/div[6]/div/a[1]"
-    xpath_bton_usa = "/html/body/div[3]/form/div/div[2]/div[1]/div[2]/div[6]/div/div/div[2]/div[1]/div[36]/div/span[1]"
+    xpath_bton_usa = "/html/body/div[3]/form/div/div[2]/div[1]/div[2]/div[6]/div/div/div[2]/div[1]/div[37]/div/span[1]"#Verificar
     xpath_btn_guardar = "/html/body/div[3]/form/div/div[2]/div[2]/div/div[1]"
 
     # Identifico a las noticias en la estructura html
@@ -55,6 +55,20 @@ def configurarRegionUSA():
     clickEnElemento(xpath_bton_usa)
     clickEnElemento(xpath_btn_guardar)
 
+    driver.switch_to.alert.accept()
+
+def configurarLanguageEnglish():
+    xpath_bton_preferencias = "/html/body/div[5]/div[2]/div[3]/div/div/div[1]/div/div/div[2]/g-header-menu/a"
+    xpath_bton_language = "/html/body/div[5]/div[2]/div[5]/div/a[2]"
+    xpath_bton_mostrar_mas = "/html/body/div[3]/form/div/div[2]/div[1]/div[1]/div[1]/a[1]"
+    xpath_btn_english = "/html/body/div[3]/form/div/div[2]/div[1]/div[1]/div[1]/div/div[1]/div[1]/div[2]/div/span[1]"
+    xpath_btn_guardar = "/html/body/div[3]/form/div/div[2]/div[2]/div/div[1]"
+
+    clickEnElemento(xpath_bton_preferencias)
+    clickEnElemento(xpath_bton_language)
+    #clickEnElemento(xpath_bton_mostrar_mas)
+    clickEnElemento(xpath_btn_english)
+    clickEnElemento(xpath_btn_guardar)
     driver.switch_to.alert.accept()
 
 def siguientePaginaNoticias():
@@ -80,6 +94,7 @@ def obtenerNoticiasFecha(palabra_clave,dia,mes,anio=2020):
     L_mes = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
     datos = {"fecha": [], "fuente": [], "titulo": [], "encabezado": []}
     pagina_conf = False
+    lenguaje_conf = False
     if dia.count("-") > 0:
         inicio,final = dia.split("-")
     else:
@@ -97,6 +112,11 @@ def obtenerNoticiasFecha(palabra_clave,dia,mes,anio=2020):
             configurarRegionUSA()
             pagina_conf = True
 
+        #Configurando lenguaje
+        if not lenguaje_conf:
+            configurarLanguageEnglish()
+            lenguaje_conf = True
+
         #Pagina configurada, ahora vamos a recoger las noticias
         recoletarNoticias(datos,fecha)
 
@@ -113,16 +133,15 @@ def obtenerNoticiasFecha(palabra_clave,dia,mes,anio=2020):
     df.to_csv('datasets/'+nombreUnido.lower() + '/' +nombre_archivo+'.csv',index=False)
     print("News guardados exitosamente en " + nombre_archivo + ".csv")
     print("Precionar Ctrl + C para evitar que la computadora explote")
-    while True:
-        playsound("alert.mp3")
-        sleep(10)
+    playsound("alert.mp3")
+    sleep(10)
 
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 # Instancio el driver de selenium que va a controlar el navegador
 driver = webdriver.Chrome(ChromeDriverManager().install())
 #Las noticias sobre un covid-19 desde 1 hasta el 31 de Enero
-obtenerNoticiasFecha("covid-19","1-31","1")
+obtenerNoticiasFecha("covid-19","1-3","1")
 #Las noticias sobre un covid-19 desde 1 hasta el 29 de Febrero
 #obtenerNoticiasFecha("covid-19","1-29","2")
 #Las noticias sobre un covid-19 desde 1 hasta el 31 de Marzo
